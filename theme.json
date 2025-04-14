@@ -7,5 +7,6 @@
   "foreground": "hsl(0 0% 100%)",
   "muted": "hsl(0 0% 20%)",
   "accent": "hsl(0 0% 100%)",
-  "border": "hsl(0 0% 20%)"
+  "border": "#2F3336",
+  "destructive": "hsl(0 84% 60%)"
 }

@@ -4,7 +4,7 @@ import React from "react";
 const Home: React.FC = () => {
   return (
     <div className="bg-black min-h-screen">
-      <header className="bg-black border-b border-gray-800">
+      <header className="bg-black border-b border-border">
         <div className="max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <svg
@@ -25,7 +25,7 @@ const Home: React.FC = () => {
         <ThreadExtractor />
       </main>
 
-      <footer className="border-t border-gray-800 mt-12 py-6 text-center text-gray-400 text-sm">
+      <footer className="border-t border-border mt-12 py-6 text-center text-gray-400 text-sm">
         <div className="max-w-3xl mx-auto px-4">
           <p>X Thread Extractor - Extract and download X threads</p>
           <p className="mt-1">This tool is not affiliated with X Corp.</p>

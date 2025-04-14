@@ -123,9 +123,12 @@ export type ApiTweet = z.infer<typeof apiTweetSchema>;
 export const threadSchema = z.object({
   id: z.number().optional(), // Optional for client-side, required for DB?
   author: z.string(), // Simplified author handle (e.g., @username)
+  authorProfilePicture: z.string().url().optional(), // Author's profile picture URL
   date: z.string(), // Formatted date string
   posts: z.array(tweetSchema),
   originalUrl: z.string().url(),
+  authorUsername: z.string(),
+  isBlueVerified: z.boolean(),
 });
 
 export type Thread = z.infer<typeof threadSchema>;

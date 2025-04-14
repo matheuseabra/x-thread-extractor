@@ -56,7 +56,7 @@ const URLInput: React.FC<URLInputProps> = ({
   };
 
   return (
-    <div className="bg-black border border-gray-800 rounded-xl p-6 mb-6">
+    <div className="bg-black border border-border rounded-xl p-6 mb-6">
       <h2 className="text-lg font-semibold mb-4 text-white">Enter Thread URL</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
@@ -65,7 +65,7 @@ const URLInput: React.FC<URLInputProps> = ({
               type="url"
               placeholder="https://x.com/username/status/123456789"
               required
-              className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+              className="w-full px-4 py-2 bg-black border border-border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
               value={threadUrl}
               onChange={(e) => {
                 setThreadUrl(e.target.value);
@@ -105,7 +105,7 @@ const URLInput: React.FC<URLInputProps> = ({
                 key={index}
                 type="button"
                 onClick={() => useExampleUrl(url)}
-                className="text-xs px-2 py-1 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded text-gray-300 transition-colors"
+                className="text-xs px-2 py-1 bg-gray-900 hover:bg-gray-800 border border-border rounded text-gray-300 transition-colors"
                 disabled={isLoading}
               >
                 Example {index + 1}

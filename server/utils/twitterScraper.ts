@@ -121,6 +121,7 @@ export async function scrapeTwitterThread(url: string): Promise<Thread> {
     // 6. Create and return Thread structure
     const thread: Thread = {
       author: `@${authorUsername}`,
+      authorProfilePicture: initialTweet.author.profilePicture,
       date: new Date(initialTweet.createdAt).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

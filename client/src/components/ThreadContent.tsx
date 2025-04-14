@@ -12,7 +12,7 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
   const [showJson, setShowJson] = useState(false);
 
   return (
-    <div className="bg-black border border-gray-800 rounded-xl p-6">
+    <div className="bg-black border border-border rounded-xl p-6">
       {/* Thread metadata and download button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
@@ -28,7 +28,14 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
       {/* Thread content */}
       <div className="space-y-4">
         {threadData.posts.map((post, index) => (
-          <ThreadItem key={index} post={post} />
+          <ThreadItem 
+            key={index} 
+            post={post} 
+            authorProfilePicture={threadData.authorProfilePicture}
+            authorName={threadData.author}
+            authorUsername={threadData.authorUsername}
+            isBlueVerified={threadData.isBlueVerified}
+          />
         ))}
       </div>
 
