@@ -12,14 +12,14 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
   const [showJson, setShowJson] = useState(false);
 
   return (
-    <div>
+    <div className="bg-black border border-gray-800 rounded-xl p-6">
       {/* Thread metadata and download button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-          <h2 className="text-xl font-bold text-[#14171A]">
-            Thread by <span className="text-[#1DA1F2]">{threadData.author}</span>
+          <h2 className="text-xl font-bold text-white">
+            Thread by <span className="text-white">{threadData.author}</span>
           </h2>
-          <p className="text-[#657786] text-sm">{threadData.date}</p>
+          <p className="text-gray-400 text-sm">{threadData.date}</p>
         </div>
         
         <DownloadButton threadData={threadData} />
@@ -35,10 +35,10 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
       {/* JSON Preview */}
       <div className="mt-8">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg font-semibold text-[#14171A]">JSON Preview</h3>
+          <h3 className="text-lg font-semibold text-white">JSON Preview</h3>
           <button 
             onClick={() => setShowJson(!showJson)} 
-            className="text-[#1DA1F2] hover:text-[#1A91DA] text-sm font-medium"
+            className="text-white hover:text-gray-300 text-sm font-medium"
           >
             {showJson ? "Hide JSON" : "Show JSON"}
           </button>

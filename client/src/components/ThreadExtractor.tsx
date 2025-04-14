@@ -61,15 +61,15 @@ const ThreadExtractor: React.FC = () => {
       {/* Loading state */}
       {isLoading && (
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1DA1F2] mx-auto"></div>
-          <p className="mt-4 text-[#657786]">Extracting thread content...</p>
-          <p className="mt-2 text-sm text-[#AAB8C2]">Connecting to Twitter API...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-gray-400">Extracting thread content...</p>
+          <p className="mt-2 text-sm text-gray-500">Connecting to X API...</p>
         </div>
       )}
 
       {/* Error message */}
       {error && !isLoading && (
-        <div className="bg-red-50 border border-red-200 text-[#E0245E] p-4 rounded-lg mb-6">
+        <div className="bg-red-900/20 border border-red-800 text-red-400 p-4 rounded-lg mb-6">
           <div className="flex flex-col">
             <div className="flex items-start">
               <svg
@@ -91,7 +91,7 @@ const ThreadExtractor: React.FC = () => {
               <div className="mt-3 text-sm pl-7">
                 <p>Possible solutions:</p>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
-                  <li>Try a different Twitter/X thread URL</li>
+                  <li>Try a different X thread URL</li>
                   <li>Check if the thread is from a public account</li>
                   <li>Wait a few minutes and try again if rate limited</li>
                 </ul>

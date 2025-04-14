@@ -13,12 +13,12 @@ const ThreadItem: React.FC<ThreadItemProps> = ({ post }) => {
   };
 
   return (
-    <div className="thread-item relative bg-white rounded-xl shadow-sm p-5 pl-16">
-      <div className="absolute left-5 top-5 w-8 h-8 rounded-full bg-[#1DA1F2] flex items-center justify-center text-white font-bold">
+    <div className="thread-item relative bg-black border border-gray-800 rounded-xl p-5 pl-16">
+      <div className="absolute left-5 top-5 w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-bold">
         {post.index}
       </div>
       
-      <div className="thread-text mb-3 text-[#14171A]">
+      <div className="thread-text mb-3 text-white">
         <p>{post.text}</p>
       </div>
       
@@ -27,7 +27,7 @@ const ThreadItem: React.FC<ThreadItemProps> = ({ post }) => {
           {post.images.map((img, index) => (
             <div key={index} className="relative">
               {!loadedImages[img.url] && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+                <div className="absolute inset-0 bg-gray-900 animate-pulse rounded-lg" />
               )}
               <img
                 src={img.url}
@@ -43,7 +43,7 @@ const ThreadItem: React.FC<ThreadItemProps> = ({ post }) => {
         </div>
       )}
       
-      <div className="text-[#657786] text-xs mt-3">{post.time}</div>
+      <div className="text-gray-400 text-xs mt-3">{post.time}</div>
     </div>
   );
 };

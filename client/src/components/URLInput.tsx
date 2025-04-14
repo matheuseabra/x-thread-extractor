@@ -56,8 +56,8 @@ const URLInput: React.FC<URLInputProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4 text-[#14171A]">Enter Thread URL</h2>
+    <div className="bg-black border border-gray-800 rounded-xl p-6 mb-6">
+      <h2 className="text-lg font-semibold mb-4 text-white">Enter Thread URL</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="flex-grow">
@@ -65,7 +65,7 @@ const URLInput: React.FC<URLInputProps> = ({
               type="url"
               placeholder="https://x.com/username/status/123456789"
               required
-              className="w-full px-4 py-2 border border-[#E1E8ED] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:border-transparent"
+              className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
               value={threadUrl}
               onChange={(e) => {
                 setThreadUrl(e.target.value);
@@ -74,20 +74,20 @@ const URLInput: React.FC<URLInputProps> = ({
               disabled={isLoading}
             />
             {validationError && (
-              <div className="mt-1 text-sm text-[#E0245E]">{validationError}</div>
+              <div className="mt-1 text-sm text-red-400">{validationError}</div>
             )}
             {apiError && (
-              <div className="mt-1 text-sm text-[#E0245E]">{apiError}</div>
+              <div className="mt-1 text-sm text-red-400">{apiError}</div>
             )}
           </div>
           <button
             type="submit"
-            className="bg-[#1DA1F2] hover:bg-[#1A91DA] text-white py-2 px-6 rounded-lg font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1DA1F2] disabled:opacity-50"
+            className="bg-white hover:bg-gray-200 text-black py-2 px-6 rounded-lg font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white disabled:opacity-50"
             disabled={isLoading}
           >
             {isLoading ? (
               <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -98,14 +98,14 @@ const URLInput: React.FC<URLInputProps> = ({
         </div>
         
         <div className="mt-2">
-          <p className="text-sm text-gray-500 mb-1">Try these example threads:</p>
+          <p className="text-sm text-gray-400 mb-1">Try these example threads:</p>
           <div className="flex flex-wrap gap-2">
             {EXAMPLE_URLS.map((url, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => useExampleUrl(url)}
-                className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 transition-colors"
+                className="text-xs px-2 py-1 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded text-gray-300 transition-colors"
                 disabled={isLoading}
               >
                 Example {index + 1}
