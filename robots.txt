@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://tools4x.pro/sitemap.xml

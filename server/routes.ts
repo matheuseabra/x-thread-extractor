@@ -1,14 +1,22 @@
 import { twitterUrlSchema } from "@shared/schema";
 import type { Express, Request, Response } from "express";
+import rateLimit from 'express-rate-limit';
 import { createServer, type Server } from "http";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
 import { scrapeTwitterThread } from "./utils/twitterScraper";
 
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 10, // Limit each IP to 10 requests per minute
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // API endpoint to extract a Twitter thread
-  app.post("/api/extract", async (req: Request, res: Response) => {
+  app.post("/api/extract", limiter, async (req: Request, res: Response) => {
     try {
       // Validate URL format
       const { url } = req.body;
@@ -61,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoint to get thread by ID
-  app.get("/api/thread/:id", async (req: Request, res: Response) => {
+  app.get("/api/thread/:id", limiter, async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid thread ID" });
