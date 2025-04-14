@@ -1,4 +1,3 @@
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -7,7 +6,6 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     react(),
-    ...(process.env.NODE_ENV !== "production" ? [runtimeErrorOverlay()] : []),
     themePlugin(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
