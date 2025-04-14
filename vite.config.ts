@@ -7,7 +7,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    ...(process.env.NODE_ENV !== "production" ? [runtimeErrorOverlay()] : []),
     themePlugin(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
