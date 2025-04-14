@@ -15,7 +15,7 @@ const Home: React.FC = () => {
             >
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
             </svg>
-            Tools4X
+            Thread Downloader
           </h1>
           <div className="text-gray-400 text-sm">Download X (Twitter) threads</div>
         </div>
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
 
       <footer className="border-t border-border mt-12 py-6 text-center text-gray-400 text-sm">
         <div className="max-w-3xl mx-auto px-4">
-          <p>Tools4X - X (Twitter) Thread Downloader</p>
+          <p>X (Twitter) Thread Downloader</p>
           <p className="mt-1">Tools4X is not affiliated with X Corp.</p>
         </div >
       </footer>

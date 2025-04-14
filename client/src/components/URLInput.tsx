@@ -57,7 +57,7 @@ const URLInput: React.FC<URLInputProps> = ({
 
   return (
     <div className="bg-black border border-border rounded-xl p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4 text-white">Enter Thread URL</h2>
+      <h2 className="text-lg font-semibold mb-4 text-white">Thread URL</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="flex-grow">
