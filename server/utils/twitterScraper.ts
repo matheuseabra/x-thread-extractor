@@ -17,6 +17,7 @@ type ApiTweet = {
     userName: string;
     name: string;
     profilePicture?: string;
+    isBlueVerified?: boolean;
   };
   entities?: {
     urls?: {
@@ -120,7 +121,9 @@ export async function scrapeTwitterThread(url: string): Promise<Thread> {
 
     // 6. Create and return Thread structure
     const thread: Thread = {
-      author: `@${authorUsername}`,
+      author: initialTweet.author.name || `@${authorUsername}`,
+      authorUsername: authorUsername,
+      isBlueVerified: initialTweet.author.isBlueVerified || false,
       authorProfilePicture: initialTweet.author.profilePicture,
       date: new Date(initialTweet.createdAt).toLocaleDateString('en-US', {
         year: 'numeric',

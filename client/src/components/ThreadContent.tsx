@@ -35,6 +35,7 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
             authorName={threadData.author}
             authorUsername={threadData.authorUsername}
             isBlueVerified={threadData.isBlueVerified}
+            isLastItem={index === threadData.posts.length - 1}
           />
         ))}
       </div>

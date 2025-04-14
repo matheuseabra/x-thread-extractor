@@ -7,6 +7,7 @@ interface ThreadItemProps {
   authorName?: string;
   authorUsername?: string;
   isBlueVerified?: boolean;
+  isLastItem?: boolean;
 }
 
 const ThreadItem: React.FC<ThreadItemProps> = ({ 
@@ -14,7 +15,8 @@ const ThreadItem: React.FC<ThreadItemProps> = ({
   authorProfilePicture, 
   authorName,
   authorUsername,
-  isBlueVerified 
+  isBlueVerified,
+  isLastItem
 }) => {
   const [loadedImages, setLoadedImages] = useState<{ [key: string]: boolean }>({});
 
@@ -24,7 +26,7 @@ const ThreadItem: React.FC<ThreadItemProps> = ({
 
   return (
     <div className="thread-item relative bg-black border border-border rounded-xl p-5 pl-16">
-      <div className="absolute left-5 top-5 w-8 h-8 rounded-full overflow-hidden border border-border">
+      <div className="absolute left-5 top-5 w-8 h-8 rounded-full overflow-hidden border border-border z-10">
         {authorProfilePicture ? (
           <img
             src={authorProfilePicture}
@@ -40,7 +42,11 @@ const ThreadItem: React.FC<ThreadItemProps> = ({
         )}
       </div>
       
-      <div className="flex items-center gap-2 mb-3">
+      {!isLastItem && (
+        <div className="absolute left-[35px] top-[40px] bottom-0 w-[2px] bg-border" />
+      )}
+      
+      <div className="flex items-center gap-2 mb-1">
         <div className="flex items-center gap-1">
           <span className="font-bold text-white">{authorName}</span>
           {isBlueVerified && (
