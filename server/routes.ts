@@ -85,7 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoint to download X videos
-  app.get("/api/download/", limiter, async (req: Request, res: Response) => {
+  app.post("/api/download/", limiter, async (req: Request, res: Response) => {
     const { url, type } = req.body;
 
     if (!url || !type) {
@@ -94,11 +94,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // Validate URL format
     const validatedUrl = twitterUrlSchema.parse(url);
+
     if (!validatedUrl) {
       return res.status(400).json({ message: "Invalid URL format" });
     }
+
     // Validate type
     const validTypes = [".mp4", ".mp3"];
+
     if (!validTypes.includes(type)) {
       return res
         .status(400)
@@ -109,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Referer": "https://x-downloader.com/"
+        Referer: "https://x-downloader.com/",
       },
       body: JSON.stringify({ url, type }),
     });
@@ -118,9 +121,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to download link" });
     }
 
-    const data = await response.json();
-    
-    return res.json(data);
+    const videoObj = await response.json();
+
+    if (!videoObj?.filename) {
+      return res
+        .status(500)
+        .json({ message: "Failed to fetch video filename" });
+    }
+
+    const videoBlob = await fetch(
+      `https://api.x-downloader.com/${videoObj?.filename}`
+    );
+
+    if (!videoBlob.ok) {
+      return res.status(500).json({ message: "Failed to fetch video blob" });
+    }
+    const arrayBuffer = await videoBlob.arrayBuffer();
+   
+    // const videoBuffer = Buffer.from(arrayBuffer);
+    // const videoPath = `./downloads/${videoObj.filename}`;
+    // await storage.saveVideo(videoPath, videoBuffer);
+    // const videoUrl = `http://localhost:3000/downloads/${videoObj.filename}`;
+    // res.json({
+    //   message: "Video downloaded successfully",
+    //   videoUrl,
+    // });
+
+    return res.json({
+      filename: videoObj.filename,
+    });
   });
 
   const httpServer = createServer(app);

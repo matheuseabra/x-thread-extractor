@@ -2,16 +2,36 @@ import React from "react";
 
 const Footer: React.FC = () => (
   <footer className="border-t border-border py-8 bg-black text-gray-400 text-sm">
-    <div className="max-w-3xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-      <div className="flex flex-col items-start">
-        <div className="flex items-center mb-3">
-          <span className="text-white font-semibold text-lg">tools4x</span>
+    <div className="max-w-3xl mx-auto pb-4 px-4 flex flex-col md:flex-row justify-between items-stretch gap-8">
+      <div className="flex flex-col items-start justify-between">
+        <div>
+          <div className="flex items-center mb-3">
+            <span className="text-white font-semibold text-lg">tools4x</span>
+          </div>
+          <span className="mt-2 text-xs text-gray-400">
+            Useful tools for X (Twitter) users.
+          </span>
         </div>
-        <span className="mt-2 text-xs text-gray-400">
-          Download content from X (Twitter) threads
-        </span>
       </div>
-      <div className="flex flex-row gap-12">
+      <div className="flex flex-row gap-12 h-full">
+        <ul className="space-y-2 min-w-[100px]">
+          <h3>
+            <span className="text-white font-semibold text-md">Tools</span>
+          </h3>
+          <li>
+            <a href="/thread" className="hover:text-white transition">
+              Thread Extractor
+            </a>
+          </li>
+          <li>
+            <a href="/video" className="hover:text-white transition">
+              Video Downloader
+            </a>
+          </li>
+          <li>
+            More (Coming Soon)
+          </li>
+        </ul>
         <ul className="space-y-2 min-w-[100px]">
           <h3>
             <span className="text-white font-semibold text-md">Links</span>
@@ -69,7 +89,7 @@ const Footer: React.FC = () => (
         </ul>
       </div>
     </div>
-    <div className="max-w-3xl mx-auto px-4 mt-4 pt-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
+    <div className="max-w-3xl mx-auto px-4 mt-4 pt-4 border-t border-gray-400 flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
       <span>© 2025 - tools4x</span>
       <div className="flex gap-4">
         <a href="/privacy" className="hover:text-white transition">
@@ -79,10 +99,6 @@ const Footer: React.FC = () => (
           Terms of Service
         </a>
       </div>
-
-      {/* <span className="mt-1 text-xs text-gray-500">
-        Tools4X is not affiliated with X Corp.
-      </span> */}
     </div>
   </footer>
 );

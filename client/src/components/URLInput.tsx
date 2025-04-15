@@ -1,6 +1,8 @@
 import { twitterUrlSchema } from "@shared/schema";
+import { DownloadIcon } from "lucide-react";
 import React, { useState } from "react";
 import { ZodError } from "zod";
+import { Button } from "./ui/button";
 
 interface URLInputProps {
   onSubmit: (url: string) => void;
@@ -60,7 +62,7 @@ const URLInput: React.FC<URLInputProps> = ({
       <p className="text-md font-semibold mb-4 text-white">Enter URL:</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="flex-grow">
+          <div className="flex flex-grow flex-col sm:flex-row gap-4">
             <input
               type="url"
               placeholder="https://x.com/username/status/123456789"
@@ -80,11 +82,8 @@ const URLInput: React.FC<URLInputProps> = ({
               <div className="mt-1 text-sm text-red-400">{apiError}</div>
             )}
           </div>
-          <button
-            type="submit"
-            className="bg-white hover:bg-gray-200 text-black py-2 px-6 rounded-lg font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white disabled:opacity-50"
-            disabled={isLoading}
-          >
+          <Button type="submit" className="sm:w-auto font-semibold">
+            <DownloadIcon className="h-4 w-4" />
             {isLoading ? (
               <div className="flex items-center">
                 <svg
@@ -112,9 +111,8 @@ const URLInput: React.FC<URLInputProps> = ({
             ) : (
               "Extract"
             )}
-          </button>
+          </Button>
         </div>
-
         <div className="mt-2">
           <p className="text-sm text-gray-400 mb-2">
             Try these example threads:

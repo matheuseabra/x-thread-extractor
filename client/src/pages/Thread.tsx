@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import ThreadExtractor from "@/components/ThreadExtractor";
 import React from "react";
 
-const Home: React.FC = () => {
+const Thread: React.FC = () => {
   return (
     <Layout>
       <h2 className="text-xl font-bold text-white mb-2">
@@ -16,4 +16,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Thread;

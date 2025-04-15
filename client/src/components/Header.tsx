@@ -44,18 +44,13 @@ const Header: React.FC = () => {
           <nav>
             <ul className="flex gap-6 text-gray-400 text-sm">
               <li>
-                <a href="/faq" className="hover:text-white transition">
-                  FAQ
+                <a href="/thread" className="hover:text-white transition">
+                  Thread Scraper
                 </a>
               </li>
               <li>
-                <a href="/about" className="hover:text-white transition">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="hover:text-white transition">
-                  Contact
+                <a href="/video" className="hover:text-white transition">
+                  Video Downloader
                 </a>
               </li>
             </ul>

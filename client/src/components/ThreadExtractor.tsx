@@ -48,12 +48,6 @@ const ThreadExtractor: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-xl font-bold text-white mb-2">
-        X (Twitter) Thread Downloader
-      </h2>
-      <p className="text-md text-gray-400 mb-4">
-        Paste the URL of a thread to extract its content.
-      </p>
       <URLInput
         onSubmit={handleSubmit}
         isLoading={isLoading}

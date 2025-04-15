@@ -1,8 +1,8 @@
 import { downloadThreadAsJson, downloadThreadAsMarkdown, downloadThreadImagesAsZip } from "@/utils/threadUtils";
 import { Thread } from "@shared/schema";
-import { DownloadIcon } from "lucide-react"; // Using lucide-react for icons
+import { DownloadIcon } from "lucide-react";
 import React from "react";
-import { Button } from "./ui/button"; // Assuming Button component exists
+import { Button } from "./ui/button";
 
 interface DownloadButtonProps {
   threadData: Thread;

@@ -28,12 +28,26 @@ type ApiTweet = {
     media?: {
       type: string;
       media_url_https: string;
+      video_info?: {
+        variants: {
+          bitrate?: number;
+          content_type: string;
+          url: string;
+        }[];
+      };
     }[];
   };
   extendedEntities?: {
     media?: {
       type: string;
       media_url_https: string;
+      video_info?: {
+        variants: {
+          bitrate?: number;
+          content_type: string;
+          url: string;
+        }[];
+      };
     }[];
   };
   likeCount?: number;
@@ -98,12 +112,21 @@ export async function scrapeTwitterThread(url: string): Promise<Thread> {
     const initialTweet = initialTweetData.tweets[0];
     const authorUsername = initialTweet.author.userName;
 
+    if (initialTweet.extendedEntities?.media?.[0]?.video_info) {
+      console.log("Video found in initial tweet.");
+
+      const videoObj = fetchVideoUrl(url);
+
+      console.log(videoObj)
+    }
+
     // 2. Fetch replies
     const repliesData = await fetchReplies(initialTweetId, authorUsername);
-    
+
     // 3. Sort replies by creation time
-    const sortedReplies = repliesData.tweets.sort((a, b) => 
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    const sortedReplies = repliesData.tweets.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
     // 4. Combine initial tweet and replies
@@ -114,9 +137,10 @@ export async function scrapeTwitterThread(url: string): Promise<Thread> {
       index: index + 1,
       text: tweet.text,
       time: new Date(tweet.createdAt).toLocaleTimeString(),
-      images: tweet.extendedEntities?.media
-        ?.filter(m => m.type === "photo")
-        .map(m => ({ url: m.media_url_https })) || []
+      images:
+        tweet.extendedEntities?.media
+          ?.filter((m) => m.type === "photo")
+          .map((m) => ({ url: m.media_url_https })) || [],
     }));
 
     // 6. Create and return Thread structure
@@ -125,17 +149,16 @@ export async function scrapeTwitterThread(url: string): Promise<Thread> {
       authorUsername: authorUsername,
       isBlueVerified: initialTweet.author.isBlueVerified || false,
       authorProfilePicture: initialTweet.author.profilePicture,
-      date: new Date(initialTweet.createdAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      date: new Date(initialTweet.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       }),
       posts,
-      originalUrl: url
+      originalUrl: url,
     };
 
     return thread;
-
   } catch (error) {
     console.error("Error fetching Twitter thread:", error);
 
@@ -282,6 +305,39 @@ async function fetchReplies(
   }
 }
 
+export async function fetchVideoUrl(url: string): Promise<string> {
+  const tweetId = extractTweetId(url);
+
+  if (!tweetId) {
+    throw new Error("Invalid Twitter/X URL. Could not extract tweet ID.");
+  }
+
+  const options = {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      url,
+      type: ".mp4",
+    }),
+  };
+
+  try {
+    const response = await fetch(
+      "https://api.x-downloader.com/request",
+      options
+    );
+    await handleApiResponseErrors(response, "fetchVideoUrl");
+
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Error fetching video URL:", error);
+    throw error;
+  }
+}
+
 /**
  * Handles common API response errors
  */
@@ -327,36 +383,39 @@ async function handleApiResponseErrors(
  */
 function formatTweet(apiTweetData: ApiTweet, index: number): Tweet {
   const images: TweetImage[] = [];
-  
+
   // Extract images from extendedEntities primarily
   if (apiTweetData.extendedEntities?.media) {
-    apiTweetData.extendedEntities.media.forEach(media => {
-      if (media.type === 'photo' && media.media_url_https) {
+    apiTweetData.extendedEntities.media.forEach((media) => {
+      if (media.type === "photo" && media.media_url_https) {
         images.push({ url: media.media_url_https });
       }
     });
-  } 
+  }
   // Fallback: Check entities.media if extendedEntities is missing/empty
   else if (apiTweetData.entities?.media) {
-     apiTweetData.entities.media.forEach(media => {
-      if (media.type === 'photo' && media.media_url_https) {
+    apiTweetData.entities.media.forEach((media) => {
+      if (media.type === "photo" && media.media_url_https) {
         images.push({ url: media.media_url_https });
       }
     });
   }
 
   // Format the time string
-  const timeString = new Date(apiTweetData.createdAt).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-  
+  const timeString = new Date(apiTweetData.createdAt).toLocaleTimeString(
+    "en-US",
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
+
   // Return the simplified Tweet structure
   return {
     index, // The sequential index within the processed thread
-    text: apiTweetData.text || '',
+    text: apiTweetData.text || "",
     time: timeString,
-    images // Array of { url: string }
+    images, // Array of { url: string }
   };
 }
 
