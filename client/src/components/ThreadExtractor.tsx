@@ -1,25 +1,23 @@
 import { useToast } from "@/hooks/use-toast";
 import useThreadExtractor from "@/hooks/useThreadExtractor";
 import React, { useEffect, useState } from "react";
+import HowItWorks from "./HowItWorks";
 import ThreadContent from "./ThreadContent";
 import URLInput from "./URLInput";
 
 const ThreadExtractor: React.FC = () => {
-  const { 
-    threadUrl, 
-    setThreadUrl, 
-    threadData, 
-    isLoading, 
-    error, 
-    extractThread 
+  const {
+    threadUrl,
+    setThreadUrl,
+    threadData,
+    isLoading,
+    error,
+    extractThread,
   } = useThreadExtractor();
 
-  console.log({ threadData })
-  
   const { toast } = useToast();
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Clear API error when URL changes
   useEffect(() => {
     setApiError(null);
   }, [threadUrl]);
@@ -29,36 +27,43 @@ const ThreadExtractor: React.FC = () => {
       setApiError(null);
       await extractThread(url);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
       setApiError(errorMessage);
-      
+
       toast({
         variant: "destructive",
         title: "Extraction failed",
-        description: errorMessage
+        description: errorMessage,
       });
     }
   };
 
-  // Determine if the error is related to the Twitter API
-  const isTwitterApiError = error && (
-    error.includes("Twitter API") || 
-    error.includes("tweet") || 
-    error.includes("API authentication") ||
-    error.includes("Rate limit")
-  );
+  const isTwitterApiError =
+    error &&
+    (error.includes("Twitter API") ||
+      error.includes("tweet") ||
+      error.includes("API authentication") ||
+      error.includes("Rate limit"));
 
   return (
     <>
-      <URLInput 
-        onSubmit={handleSubmit} 
-        isLoading={isLoading} 
+      <h2 className="text-xl font-bold text-white mb-2">
+        X (Twitter) Thread Downloader
+      </h2>
+      <p className="text-md text-gray-400 mb-4">
+        Paste the URL of a thread to extract its content.
+      </p>
+      <URLInput
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
         threadUrl={threadUrl}
         setThreadUrl={setThreadUrl}
         apiError={apiError}
       />
 
-      {/* Loading state */}
+      {!threadData && !isLoading && !error && <HowItWorks />}
+
       {isLoading && (
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
@@ -67,7 +72,6 @@ const ThreadExtractor: React.FC = () => {
         </div>
       )}
 
-      {/* Error message */}
       {error && !isLoading && (
         <div className="bg-red-900/20 border border-red-800 text-red-400 p-4 rounded-lg mb-6">
           <div className="flex flex-col">
@@ -86,7 +90,7 @@ const ThreadExtractor: React.FC = () => {
               </svg>
               <span className="font-medium">{error}</span>
             </div>
-            
+
             {isTwitterApiError && (
               <div className="mt-3 text-sm pl-7">
                 <p>Possible solutions:</p>
@@ -101,7 +105,6 @@ const ThreadExtractor: React.FC = () => {
         </div>
       )}
 
-      {/* Thread content */}
       {threadData && !isLoading && !error && (
         <ThreadContent threadData={threadData} />
       )}

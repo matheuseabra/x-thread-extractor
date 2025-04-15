@@ -13,7 +13,6 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
 
   return (
     <div className="bg-black border border-border rounded-xl p-6">
-      {/* Thread metadata and download button */}
       <div className="sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div className="mb-4">
           <h2 className="text-xl font-bold text-white">
@@ -25,7 +24,6 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
         <DownloadButton threadData={threadData} />
       </div>
 
-      {/* Thread content */}
       <div className="space-y-4">
         {threadData.posts.map((post, index) => (
           <ThreadItem 
