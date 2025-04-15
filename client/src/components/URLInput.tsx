@@ -14,26 +14,26 @@ interface URLInputProps {
 const EXAMPLE_URLS = [
   "https://twitter.com/elonmusk/status/1516593781357088773",
   "https://x.com/naval/status/1002103360646823936",
-  "https://twitter.com/paulg/status/1571304186314371075"
+  "https://twitter.com/paulg/status/1571304186314371075",
 ];
 
-const URLInput: React.FC<URLInputProps> = ({ 
-  onSubmit, 
-  isLoading, 
-  threadUrl, 
+const URLInput: React.FC<URLInputProps> = ({
+  onSubmit,
+  isLoading,
+  threadUrl,
   setThreadUrl,
-  apiError: propApiError 
+  apiError: propApiError,
 }) => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [localApiError, setLocalApiError] = useState<string | null>(null);
-  
+
   // Use the API error from props or the local state
   const apiError = propApiError || localApiError;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLocalApiError(null);
-    
+
     try {
       // Validate URL format
       twitterUrlSchema.parse(threadUrl);
@@ -57,7 +57,7 @@ const URLInput: React.FC<URLInputProps> = ({
 
   return (
     <div className="bg-black border border-border rounded-xl p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4 text-white">Thread URL</h2>
+      <p className="text-md font-semibold mb-4 text-white">Enter Thread URL:</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="flex-grow">
@@ -87,25 +87,45 @@ const URLInput: React.FC<URLInputProps> = ({
           >
             {isLoading ? (
               <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-black"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Extracting...
               </div>
-            ) : "Extract Thread"}
+            ) : (
+              "Extract"
+            )}
           </button>
         </div>
-        
+
         <div className="mt-2">
-          <p className="text-sm text-gray-400 mb-1">Try these example threads:</p>
+          <p className="text-sm text-gray-400 mb-2">
+            Try these example threads:
+          </p>
           <div className="flex flex-wrap gap-2">
             {EXAMPLE_URLS.map((url, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => useExampleUrl(url)}
-                className="text-xs px-2 py-1 bg-gray-900 hover:bg-gray-800 border border-border rounded text-gray-300 transition-colors"
+                className="text-xs px-2 py-1 border border-border rounded text-gray-300 transition-colors"
                 disabled={isLoading}
               >
                 Example {index + 1}

@@ -22,7 +22,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ threadData }) => {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2 items-center justify-start sm:justify-start w-full">
       <Button
         onClick={handleJsonDownload}
         variant="outline" // Use outline variant for consistency or choose another
