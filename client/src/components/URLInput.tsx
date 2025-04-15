@@ -1,5 +1,4 @@
 import { twitterUrlSchema } from "@shared/schema";
-import { DownloadIcon } from "lucide-react";
 import React, { useState } from "react";
 import { ZodError } from "zod";
 import { Button } from "./ui/button";
@@ -83,7 +82,6 @@ const URLInput: React.FC<URLInputProps> = ({
             )}
           </div>
           <Button type="submit" className="sm:w-auto font-semibold">
-            <DownloadIcon className="h-4 w-4" />
             {isLoading ? (
               <div className="flex items-center">
                 <svg

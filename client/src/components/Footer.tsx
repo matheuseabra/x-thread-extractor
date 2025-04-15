@@ -1,12 +1,19 @@
 import React from "react";
 
 const Footer: React.FC = () => (
-  <footer className="border-t border-border py-8 bg-black text-gray-400 text-sm">
-    <div className="max-w-3xl mx-auto pb-4 px-4 flex flex-col md:flex-row justify-between items-stretch gap-8">
+  <footer className="border-t border-border pt-8 pb-2 bg-black text-gray-400 text-sm">
+    <div className="max-w-3xl mx-auto pb-12 flex flex-col md:flex-row justify-between items-stretch gap-8">
       <div className="flex flex-col items-start justify-between">
         <div>
-          <div className="flex items-center mb-3">
-            <span className="text-white font-semibold text-lg">tools4x</span>
+          <div className="flex items-center mb-4">
+            <img
+              src="/assets/tools4x-logo.png"
+              width={18}
+              height={18}
+              className="mr-2"
+              alt="tools4x logo"
+            />
+            <span className="text-white font-semibold text-lg">tools4x.pro</span>
           </div>
           <span className="mt-2 text-xs text-gray-400">
             Useful tools for X (Twitter) users.
@@ -28,9 +35,7 @@ const Footer: React.FC = () => (
               Video Downloader
             </a>
           </li>
-          <li>
-            More (Coming Soon)
-          </li>
+          <li>Profile Downloader (coming soon)</li>
         </ul>
         <ul className="space-y-2 min-w-[100px]">
           <h3>
@@ -89,9 +94,9 @@ const Footer: React.FC = () => (
         </ul>
       </div>
     </div>
-    <div className="max-w-3xl mx-auto px-4 mt-4 pt-4 border-t border-gray-400 flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
+    <div className="max-w-3xl mx-auto border-t border-border py-2 bg-black text-gray-400 flex flex-col md:flex-row items-center justify-between gap-1 text-xs">
       <span>© 2025 - tools4x</span>
-      <div className="flex gap-4">
+      <div className="flex gap-2">
         <a href="/privacy" className="hover:text-white transition">
           Privacy
         </a>

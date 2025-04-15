@@ -30,14 +30,7 @@ const Header: React.FC = () => {
       <div className="max-w-3xl mx-auto w-full px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex items-center">
           <a href="/" className="flex items-center cursor-pointer">
-            <img
-              src="/assets/tools4x-logo.png"
-              width={24}
-              height={24}
-              className="mr-2"
-              alt="tools4x logo"
-            />
-            <span className="text-lg font-bold text-white">tools4x</span>
+            <span className="text-lg font-bold text-white">tools4x.pro</span>
           </a>
         </div>
         <div className="flex items-center gap-8">
