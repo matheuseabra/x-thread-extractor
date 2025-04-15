@@ -14,10 +14,10 @@ const ThreadContent: React.FC<ThreadContentProps> = ({ threadData }) => {
   return (
     <div className="bg-black border border-border rounded-xl p-6">
       {/* Thread metadata and download button */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div>
+      <div className="sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div className="mb-4">
           <h2 className="text-xl font-bold text-white">
-            Thread by <span className="text-white">{threadData.author}</span>
+            Thread by <span className="text-white">@{threadData.authorUsername}</span>
           </h2>
           <p className="text-gray-400 text-sm">{threadData.date}</p>
         </div>

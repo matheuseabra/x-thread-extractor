@@ -1,4 +1,5 @@
 import { Thread, Tweet, TweetImage } from "@shared/schema";
+import JSZip from "jszip";
 
 /**
  * Generates a file name for the downloaded thread JSON
@@ -50,7 +51,7 @@ export function generateMarkdownFileName(thread: Thread): string {
  */
 export function downloadThreadAsMarkdown(thread: Thread): void {
   // Format the thread as Markdown
-  let markdownContent = `# Thread by ${thread.author}\n\n`;
+  let markdownContent = `#\nThread by ${thread.author}\n\n`;
   thread.posts.forEach((tweet: Tweet, index: number) => {
     markdownContent += `## Tweet ${index + 1}\n\n`;
     markdownContent += `${tweet.text}\n\n`;
@@ -87,6 +88,47 @@ export function downloadThreadAsMarkdown(thread: Thread): void {
   }, 0);
 }
 
+/**
+ * Downloads all thread images as a ZIP file
+ */
+export async function downloadThreadImagesAsZip(thread: Thread): Promise<void> {
+  const zip = new JSZip();
+  let imageCount = 0;
+
+  // Collect all images from all posts
+  thread.posts.forEach((tweet: Tweet, postIdx: number) => {
+    if (tweet.images && tweet.images.length > 0) {
+      tweet.images.forEach((image: TweetImage, imgIdx: number) => {
+        // Name images as post-1-img-1.jpg, etc.
+        const ext = image.url.split('.').pop()?.split('?')[0] || 'jpg';
+        const filename = `post-${postIdx + 1}-img-${imgIdx + 1}.${ext}`;
+        zip.file(filename, fetch(image.url).then(r => r.blob()));
+        imageCount++;
+      });
+    }
+  });
+
+  if (imageCount === 0) {
+    alert("No images found in this thread.");
+    return;
+  }
+
+  // Generate the zip and trigger download
+  const content = await zip.generateAsync({ type: "blob" });
+  const author = thread.author.replace('@', '');
+  const date = new Date().toISOString().split('T')[0];
+  const zipName = `${author}_thread_images_${date}.zip`;
+  const url = URL.createObjectURL(content);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = zipName;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 0);
+}
 
 /**
  * Validates if a URL is a valid Twitter/X thread URL

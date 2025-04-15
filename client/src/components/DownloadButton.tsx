@@ -1,4 +1,4 @@
-import { downloadThreadAsJson, downloadThreadAsMarkdown } from "@/utils/threadUtils";
+import { downloadThreadAsJson, downloadThreadAsMarkdown, downloadThreadImagesAsZip } from "@/utils/threadUtils";
 import { Thread } from "@shared/schema";
 import { DownloadIcon } from "lucide-react"; // Using lucide-react for icons
 import React from "react";
@@ -15,6 +15,10 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ threadData }) => {
 
   const handleMarkdownDownload = () => {
     downloadThreadAsMarkdown(threadData);
+  };
+
+  const handleImagesDownload = async () => {
+    await downloadThreadImagesAsZip(threadData);
   };
 
   return (
@@ -34,6 +38,14 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ threadData }) => {
       >
         <DownloadIcon className="h-4 w-4" />
         Download Markdown
+      </Button>
+      <Button
+        onClick={handleImagesDownload}
+        variant="outline"
+        className="flex items-center gap-2"
+      >
+        <DownloadIcon className="h-4 w-4" />
+        Download Images
       </Button>
     </div>
   );
