@@ -38,7 +38,7 @@ const Header: React.FC = () => {
             <ul className="flex gap-6 text-gray-400 text-sm">
               <li>
                 <a href="/thread" className="hover:text-white transition">
-                  Thread Scraper
+                  Thread Extractor
                 </a>
               </li>
               <li>
