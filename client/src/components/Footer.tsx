@@ -13,7 +13,9 @@ const Footer: React.FC = () => (
               className="mr-2"
               alt="tools4x logo"
             />
-            <span className="text-white font-semibold text-lg">tools4x.pro</span>
+            <span className="text-white font-semibold text-lg">
+              tools4x.pro
+            </span>
           </div>
           <span className="mt-2 text-xs text-gray-400">
             Useful tools for X (Twitter) users.
@@ -35,7 +37,7 @@ const Footer: React.FC = () => (
               Video Downloader
             </a>
           </li>
-          <li>Profile Downloader (coming soon)</li>
+          <li>Profile Downloader (soon)</li>
         </ul>
         <ul className="space-y-2 min-w-[100px]">
           <h3>
@@ -68,7 +70,7 @@ const Footer: React.FC = () => (
               rel="noopener noreferrer"
               className="hover:text-white transition"
             >
-              X
+              X (Twitter)
             </a>
           </li>
           <li>
@@ -78,7 +80,7 @@ const Footer: React.FC = () => (
               rel="noopener noreferrer"
               className="hover:text-white transition"
             >
-              YouTube
+              Youtube
             </a>
           </li>
           <li>

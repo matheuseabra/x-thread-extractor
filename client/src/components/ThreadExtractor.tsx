@@ -1,4 +1,3 @@
-import { useToast } from "@/hooks/use-toast";
 import useThreadExtractor from "@/hooks/useThreadExtractor";
 import React, { useEffect, useState } from "react";
 import HowItWorks from "./HowItWorks";
@@ -15,7 +14,6 @@ const ThreadExtractor: React.FC = () => {
     extractThread,
   } = useThreadExtractor();
 
-  const { toast } = useToast();
   const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,12 +28,6 @@ const ThreadExtractor: React.FC = () => {
       const errorMessage =
         err instanceof Error ? err.message : "An unknown error occurred";
       setApiError(errorMessage);
-
-      toast({
-        variant: "destructive",
-        title: "Extraction failed",
-        description: errorMessage,
-      });
     }
   };
 

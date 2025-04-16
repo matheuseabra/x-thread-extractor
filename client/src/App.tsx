@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
 import About from "@/pages/About";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
@@ -31,7 +30,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
-      <Toaster />
     </QueryClientProvider>
   );
 }
