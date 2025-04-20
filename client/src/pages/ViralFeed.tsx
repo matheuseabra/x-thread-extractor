@@ -9,17 +9,15 @@ const ViralFeed: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log({ tweets });
-
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:9000/api/viral-tweets")
+    fetch(`${window.location.origin}/api/tweets/viral`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch viral tweets");
         return res.json();
       })
       .then((data) => {
-        setTweets(data.tweets || data); // support both {tweets:[]} and []
+        setTweets(data.tweets);
         setLoading(false);
       })
       .catch((err) => {

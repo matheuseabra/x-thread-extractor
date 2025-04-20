@@ -153,7 +153,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoint to get highly viral and engaging tweets
-  app.get("/api/viral-tweets", limiter, async (req: Request, res: Response) => {
+  app.get("/api/tweets/viral", limiter, async (req: Request, res: Response) => {
     try {
       const minLikes = 1000;
       const minRetweets = 500;
