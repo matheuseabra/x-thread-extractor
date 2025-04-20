@@ -5,6 +5,7 @@ import { createServer, type Server } from "http";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
+import { supabaseServerClient } from './supabaseServerClient';
 import { scrapeTwitterThread } from "./utils/twitterScraper";
 
 const limiter = rateLimit({
@@ -164,8 +165,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     if (code) {
-      // Use the secure Supabase server client
-      const { supabaseServerClient } = require("./supabaseServerClient");
       const response = await supabaseServerClient.auth.exchangeCodeForSession(code);
 
       if (response.data.user && response.data.user.email) {
@@ -198,9 +197,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.redirect(`${requestUrl.origin}/error?error_description=${error_description}`);
       }
     }
-    // getURL() should be imported from your utils
-    const { getURL } = require("../src/lib/utils");
-    return res.redirect(getURL());
+
+    return res.redirect(`${requestUrl}/dashboard`);
   });
 
   const httpServer = createServer(app);
