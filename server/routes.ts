@@ -152,6 +152,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // --- Auth callback route (refactored from Next.js to Express) ---
+  app.get("/api/auth/callback", async (req: Request, res: Response) => {
+    const requestUrl = new URL(req.protocol + "://" + req.get("host") + req.originalUrl);
+    const code = requestUrl.searchParams.get("code");
+    const error_description = requestUrl.searchParams.get("error_description");
+
+    if (error_description) {
+      const supabase_error_description = encodeURIComponent(error_description);
+      return res.redirect(`${requestUrl.origin}/error?error_description=${supabase_error_description}`);
+    }
+
+    if (code) {
+      // Use the secure Supabase server client
+      const { supabaseServerClient } = require("./supabaseServerClient");
+      const response = await supabaseServerClient.auth.exchangeCodeForSession(code);
+
+      if (response.data.user && response.data.user.email) {
+        await supabaseServerClient.from("users").insert({
+          id: response.data.user.id,
+          username: response.data.user.user_metadata.name,
+          email: response.data.user.email,
+          email_confirmed_at: response.data.user.email_confirmed_at,
+        });
+
+        const { data, error: selectAvatarError } = await supabaseServerClient
+          .from("users")
+          .select("avatar_url")
+          .eq("email", response.data.user.email)
+          .single();
+
+        if (selectAvatarError) throw selectAvatarError;
+
+        if (!data?.avatar_url) {
+          await supabaseServerClient
+            .from("users")
+            .update({
+              email_confirmed_at: response.data.user.updated_at,
+              avatar_url: response.data.user.user_metadata.avatar_url,
+            })
+            .eq("id", response.data.user.id);
+        }
+      } else {
+        const error_description = encodeURIComponent("No user found after exchanging cookies for registration");
+        return res.redirect(`${requestUrl.origin}/error?error_description=${error_description}`);
+      }
+    }
+    // getURL() should be imported from your utils
+    const { getURL } = require("../src/lib/utils");
+    return res.redirect(getURL());
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
