@@ -11,7 +11,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, belowForm }) => (
       <img
         src="/assets/tools4x-logo.png"
         alt="tools4x logo"
-        className="w-10 h-10 mr-3"
+        className="w-auto h-8 mr-3"
       />
       <span className="text-white text-2xl font-bold tracking-tight">tools4x</span>
     </div>

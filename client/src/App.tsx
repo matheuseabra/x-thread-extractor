@@ -13,13 +13,12 @@ import Login from "./pages/Login";
 import Privacy from "./pages/Privacy";
 import SignUp from "./pages/SignUp";
 import Thread from "./pages/Thread";
+import ViralFeed from "./pages/ViralFeed";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/thread" component={Thread} />
-      <Route path="/video" component={VideoDownloader} />
       <Route path="/about" component={About} />
       <Route path="/faq" component={FAQ} />
       <Route path="/privacy" component={Privacy} />
@@ -29,6 +28,21 @@ function Router() {
       <Route path="/dashboard" component={() => (
         <ProtectedRoute>
           <Dashboard />
+        </ProtectedRoute>
+      )} />
+       <Route path="/viral-feed" component={() => (
+        <ProtectedRoute>
+          <ViralFeed />
+        </ProtectedRoute>
+      )} />
+      <Route path="/thread" component={() => (
+        <ProtectedRoute>
+          <Thread />
+        </ProtectedRoute>
+      )} />
+      <Route path="/video" component={() => (
+        <ProtectedRoute>
+          <VideoDownloader />
         </ProtectedRoute>
       )} />
       <Route path="/404" component={NotFound} />

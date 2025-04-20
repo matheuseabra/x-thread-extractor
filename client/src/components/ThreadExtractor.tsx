@@ -1,6 +1,5 @@
 import useThreadExtractor from "@/hooks/useThreadExtractor";
 import React, { useEffect, useState } from "react";
-import HowItWorks from "./HowItWorks";
 import ThreadContent from "./ThreadContent";
 import URLInput from "./URLInput";
 
@@ -47,8 +46,6 @@ const ThreadExtractor: React.FC = () => {
         setThreadUrl={setThreadUrl}
         apiError={apiError}
       />
-
-      {!threadData && !isLoading && !error && <HowItWorks />}
 
       {isLoading && (
         <div className="text-center py-8">

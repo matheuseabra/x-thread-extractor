@@ -57,7 +57,7 @@ const URLInput: React.FC<URLInputProps> = ({
   };
 
   return (
-    <div className="bg-black border border-border rounded-xl p-6 mb-6">
+    <div className="bg-zinc-900 border border-border rounded-xl p-6 mb-6">
       <p className="text-md font-semibold mb-4 text-white">Enter URL:</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">

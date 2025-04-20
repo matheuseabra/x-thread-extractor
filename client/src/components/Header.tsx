@@ -13,24 +13,10 @@ const Header: React.FC = () => {
           </a>
         </div>
         <div className="flex items-center gap-8">
-          <nav>
-            <ul className="flex gap-6 text-gray-400 text-sm">
-              <li>
-                <a href="/thread" className="hover:text-white transition">
-                  Thread Extractor
-                </a>
-              </li>
-              <li>
-                <a href="/video" className="hover:text-white transition">
-                  Video Downloader
-                </a>
-              </li>
-            </ul>
-          </nav>
           <div className="flex gap-2 ml-4">
             {!user && (
               <>
-                <Button asChild size="sm" variant="secondary" className="bg-white text-black hover:bg-gray-100">
+                <Button asChild size="sm" variant="link" className="hover:bg-black hover:text-white hover:no-underline">
                   <a href="/login">Sign In</a>
                 </Button>
                 <Button asChild size="sm" variant="default" className="bg-white text-black hover:bg-gray-100">

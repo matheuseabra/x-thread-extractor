@@ -69,7 +69,7 @@ export default function Login() {
           onClick={async () => {
             setLoading(true);
             setError(null);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'twitter', options: { redirectTo: `${location.origin}/auth/callback/oauth` } });
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'twitter', options: { redirectTo: `${location.origin}/dashboard` } });
             console.log("Twitter login error:", error); 
             if (error) setError(error.message);
             setLoading(false);

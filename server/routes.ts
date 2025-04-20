@@ -5,7 +5,6 @@ import { createServer, type Server } from "http";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { storage } from "./storage";
-import { supabaseServerClient } from './supabaseServerClient';
 import { scrapeTwitterThread } from "./utils/twitterScraper";
 
 const limiter = rateLimit({
@@ -138,7 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to fetch video blob" });
     }
     const arrayBuffer = await videoBlob.arrayBuffer();
-   
+
     // const videoBuffer = Buffer.from(arrayBuffer);
     // const videoPath = `./downloads/${videoObj.filename}`;
     // await storage.saveVideo(videoPath, videoBuffer);
@@ -153,52 +152,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // --- Auth callback route (refactored from Next.js to Express) ---
-  app.get("/api/auth/callback", async (req: Request, res: Response) => {
-    const requestUrl = new URL(req.protocol + "://" + req.get("host") + req.originalUrl);
-    const code = requestUrl.searchParams.get("code");
-    const error_description = requestUrl.searchParams.get("error_description");
+  // API endpoint to get highly viral and engaging tweets
+  app.get("/api/viral-tweets", limiter, async (req: Request, res: Response) => {
+    try {
+      const minLikes = 1000;
+      const minRetweets = 500;
+      const minReplies = 100;
 
-    if (error_description) {
-      const supabase_error_description = encodeURIComponent(error_description);
-      return res.redirect(`${requestUrl.origin}/error?error_description=${supabase_error_description}`);
-    }
-
-    if (code) {
-      const response = await supabaseServerClient.auth.exchangeCodeForSession(code);
-
-      if (response.data.user && response.data.user.email) {
-        await supabaseServerClient.from("users").insert({
-          id: response.data.user.id,
-          username: response.data.user.user_metadata.name,
-          email: response.data.user.email,
-          email_confirmed_at: response.data.user.email_confirmed_at,
-        });
-
-        const { data, error: selectAvatarError } = await supabaseServerClient
-          .from("users")
-          .select("avatar_url")
-          .eq("email", response.data.user.email)
-          .single();
-
-        if (selectAvatarError) throw selectAvatarError;
-
-        if (!data?.avatar_url) {
-          await supabaseServerClient
-            .from("users")
-            .update({
-              email_confirmed_at: response.data.user.updated_at,
-              avatar_url: response.data.user.user_metadata.avatar_url,
-            })
-            .eq("id", response.data.user.id);
-        }
-      } else {
-        const error_description = encodeURIComponent("No user found after exchanging cookies for registration");
-        return res.redirect(`${requestUrl.origin}/error?error_description=${error_description}`);
+      const query = [
+        "filter:has_engagement",
+        "-filter:retweets",
+        "-filter:replies",
+        "-filter:quote",
+        `min_faves:${minLikes}`,
+        `min_retweets:${minRetweets}`,
+        `min_replies:${minReplies}`,
+        `lang:en`,
+      ].join(" ");
+      const url = new URL(
+        "https://api.twitterapi.io/twitter/tweet/advanced_search"
+      );
+      url.searchParams.append("query", query);
+      // Optionally, add sort by engagement (if supported by API)
+      const options = {
+        method: "GET",
+        headers: {
+          "X-API-Key": "af67c3283d474406ad029d9b38b1eba3",
+          Accept: "application/json",
+        },
+      };
+      const response = await fetch(url.toString(), options);
+      if (!response.ok) {
+        return res
+          .status(500)
+          .json({ message: "Failed to fetch viral tweets" });
       }
+      const data = await response.json();
+      // Return only the tweets array for grid UI
+      return res.json({
+        tweets: data.tweets || [],
+        hasNextPage: data.has_next_page,
+        nextCursor: data.next_cursor,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      return res.status(500).json({ message: errorMessage });
     }
-
-    return res.redirect(`${requestUrl}/dashboard`);
   });
 
   const httpServer = createServer(app);
