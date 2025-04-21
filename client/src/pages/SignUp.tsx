@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -14,7 +16,32 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const { error } = await supabase.auth.signUp({ email, password });
+
+    // Password strength check
+    const passwordStrength = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordStrength.test(password)) {
+      setError("Password must be at least 8 characters, include uppercase, lowercase, and a number.");
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+    if (!fullName.trim()) {
+      setError("Full name is required.");
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { display_name: fullName }
+      }
+    });
     if (error) setError(error.message);
     setLoading(false);
   };
@@ -32,8 +59,16 @@ export default function SignUp() {
         </>
       }
     >
-      <form onSubmit={handleSignUp} className="border border-gray-700 bg-black p-8 rounded-2xl w-full max-w-sm">
+      <form onSubmit={handleSignUp} className="bg-zinc-900 border border-border p-8 rounded-2xl w-full max-w-sm">
         <h2 className="text-xl font-bold mb-6 text-white">Sign Up</h2>
+        <input
+          type="text"
+          placeholder="Full Name"
+          value={fullName}
+          onChange={e => setFullName(e.target.value)}
+          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          required
+        />
         <input
           type="email"
           placeholder="Email"
@@ -47,6 +82,14 @@ export default function SignUp() {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
           className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />

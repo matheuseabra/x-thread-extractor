@@ -1,5 +1,11 @@
+import { Checkout } from "@polar-sh/express";
+import {
+  validateEvent,
+  WebhookVerificationError,
+} from "@polar-sh/sdk/webhooks";
 import { twitterUrlSchema } from "@shared/schema";
 import type { Express, Request, Response } from "express";
+import express from "express";
 import rateLimit from "express-rate-limit";
 import { createServer, type Server } from "http";
 import { ZodError } from "zod";
@@ -159,6 +165,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const minRetweets = 500;
       const minReplies = 100;
 
+      const cursor = req.query.cursor as string | undefined;
+
       const query = [
         "filter:has_engagement",
         "-filter:retweets",
@@ -173,6 +181,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "https://api.twitterapi.io/twitter/tweet/advanced_search"
       );
       url.searchParams.append("query", query);
+      url.searchParams.append("queryType", "Top");
+      if (cursor) {
+        url.searchParams.append("cursor", cursor);
+      }
       // Optionally, add sort by engagement (if supported by API)
       const options = {
         method: "GET",
@@ -200,6 +212,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: errorMessage });
     }
   });
+
+  app.get(
+    "/checkout",
+    Checkout({
+      accessToken: "polar_oat_87vVyXQei20yxtj9XbO0UdQccf1NlgF6I3oLZ0VOqbd", // Or set an environment variable to POLAR_ACCESS_TOKEN
+      successUrl: process.env.SUCCESS_URL || "http://localhost:9000/dashboard",
+      server: "sandbox", // Use sandbox if you're testing Polar - omit the parameter or pass 'production' otherwise
+    })
+  );
+
+  app.post(
+    "/webhook",
+    express.raw({ type: "application/json" }),
+    (req: Request, res: Response) => {
+      try {
+        // Convert headers to Record<string, string>
+        const stringHeaders: Record<string, string> = Object.fromEntries(
+          Object.entries(req.headers)
+            .filter(([_, v]) => typeof v === "string" || Array.isArray(v))
+            .map(([k, v]) => [k, Array.isArray(v) ? v.join(",") : v ?? ""])
+        );
+
+        const event = validateEvent(
+          req.body,
+          stringHeaders,
+          process.env["POLAR_WEBHOOK_SECRET"] ?? ""
+        );
+
+        // Process the event
+        console.log("Received event:", event);
+
+        res.status(200).json(event);
+      } catch (error) {
+        if (error instanceof WebhookVerificationError) {
+          res.status(403).send("");
+        }
+        throw error;
+      }
+    }
+  );
 
   const httpServer = createServer(app);
   return httpServer;

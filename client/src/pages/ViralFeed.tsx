@@ -1,13 +1,31 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ApiTweet } from "@shared/schema";
-import { Heart, Loader2, MessageCircle, Repeat2, User } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import {
+  ExternalLinkIcon,
+  Heart,
+  Loader2,
+  MessageCircle,
+  MoreVertical,
+  Repeat2,
+  User
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const ViralFeed: React.FC = () => {
   const [tweets, setTweets] = useState<ApiTweet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -18,6 +36,8 @@ const ViralFeed: React.FC = () => {
       })
       .then((data) => {
         setTweets(data.tweets);
+        setHasNextPage(data.hasNextPage);
+        setNextCursor(data.nextCursor || null);
         setLoading(false);
       })
       .catch((err) => {
@@ -26,17 +46,44 @@ const ViralFeed: React.FC = () => {
       });
   }, []);
 
+  const fetchMoreTweets = () => {
+    if (!hasNextPage || !nextCursor) return;
+    fetch(`${window.location.origin}/api/tweets/viral?cursor=${nextCursor}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch more tweets");
+        return res.json();
+      })
+      .then((data) => {
+        setTweets((prev) => [...prev, ...data.tweets]);
+        setHasNextPage(data.hasNextPage);
+        setNextCursor(data.nextCursor || null);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
+
   if (loading)
     return (
       <DashboardLayout>
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-1 min-h-[75vh] items-center justify-center">
           <Loader2 className="h-8 w-8 text-white mb-4 animate-spin" />
         </div>
       </DashboardLayout>
     );
 
   if (error)
-    return <div className="text-center py-12 text-red-400">{error}</div>;
+    return (
+      <div>
+        <DashboardLayout>
+          <div className="flex flex-1 min-h-[75vh]  items-center justify-center">
+            <div className="text-center rounded-sm p-4 bg-red-300 font-semibold text-red-800">
+              {error}
+            </div>
+          </div>
+        </DashboardLayout>
+      </div>
+    );
 
   return (
     <DashboardLayout>
@@ -47,32 +94,69 @@ const ViralFeed: React.FC = () => {
             Explore the most viral and engaging tweets right now.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tweets.map((tweet) => (
-            <a
-              key={tweet.id}
-              href={tweet.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group"
-              style={{ textDecoration: "none" }}
-            >
-              <Card className="bg-black border border-border rounded-xl p-5 flex flex-col justify-between h-full relative transition ring-0 group-hover:ring-2 group-hover:ring-blue-500 cursor-pointer">
-                <div className="flex items-center gap-3 mb-3">
-                  {tweet.author.profilePicture ? (
-                    <img
-                      src={tweet.author.profilePicture}
-                      alt="profile"
-                      className="w-10 h-10 rounded-full border border-border"
-                    />
-                  ) : (
-                    <User className="w-10 h-10 text-gray-600 border border-border rounded-full p-1" />
-                  )}
-                  <div className="flex items-center flex-row gap-2">
-                    <div>
-                      <p className="flex items-center font-semibold text-white">
-                        {tweet.author.name}
-                      
+        <InfiniteScroll
+          dataLength={tweets.length}
+          next={fetchMoreTweets}
+          hasMore={hasNextPage}
+          loader={
+            <div className="flex justify-center py-4">
+              <Loader2 className="h-6 w-6 text-white animate-spin" />
+            </div>
+          }
+          endMessage={
+            <p className="text-center text-gray-400 py-4">
+              No more viral tweets.
+            </p>
+          }
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            {tweets.map((tweet) => (
+              <a
+                key={tweet.id}
+                href={tweet.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group"
+                style={{ textDecoration: "none" }}
+              >
+                <Card className="bg-zinc-900 border border-border rounded-xl p-5 flex flex-col relative transition cursor-pointer">
+                  {/* Dropdown menu with MoreVertical icon */}
+                  <div className="absolute top-4 right-4 z-10 text-gray-400">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="hover:text-white transition-colors focus:outline-none">
+                          <MoreVertical className="w-5 h-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.open(tweet.url, "_blank");
+                          }}
+                        >
+                          <span className="mr-2 text-gray-500">
+                            <ExternalLinkIcon className="w-4 h-4" />
+                          </span>
+                          Open in new tab
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <div className="flex items-center gap-3 mb-3">
+                    {tweet.author.profilePicture ? (
+                      <img
+                        src={tweet.author.profilePicture}
+                        alt="profile"
+                        className="w-10 h-10 rounded-full border border-border"
+                      />
+                    ) : (
+                      <User className="w-10 h-10 text-gray-600 border border-border rounded-full p-1" />
+                    )}
+                    <div className="flex items-center flex-row gap-2">
+                      <div>
+                        <p className="flex items-center font-semibold text-white">
+                          {tweet.author.name}
                           {tweet.author.isBlueVerified && (
                             <span className="ml-1">
                               <svg
@@ -84,38 +168,47 @@ const ViralFeed: React.FC = () => {
                               </svg>
                             </span>
                           )}
-                       
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        @{tweet.author.userName}
-                      </p>
+                        </p>
+                        <div className="flex items-center gap-1">
+                          <p className="text-sm text-gray-400">
+                            @{tweet.author.userName}
+                          </p>
+                          <small className="font-xs text-gray-400">
+                            {formatDistanceToNow(tweet.createdAt)}
+                          </small>
+                        </div>
+                      </div>
                     </div>
-                    {/* <span className="text-xs text-gray-500">
-                      {formatDistanceToNow(new Date(tweet.createdAt))}
-                    </span> */}
                   </div>
-                </div>
-                <div className="text-white text-sm mb-4 line-clamp-5">
-                  {tweet.text}
-                </div>
-                <div className="flex items-center justify-between text-xs text-gray-400 mb-2 gap-2">
-                  <span className="flex items-center gap-1">
-                    <Heart className="w-4 h-4 text-gray-400" />
-                    {tweet.likeCount}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Repeat2 className="w-4 h-4 text-gray-400" />
-                    {tweet.retweetCount}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MessageCircle className="w-4 h-4 text-gray-400" />
-                    {tweet.replyCount}
-                  </span>
-                </div>
-              </Card>
-            </a>
-          ))}
-        </div>
+                  <div className="text-white text-sm mb-4 line-clamp-5">
+                    {tweet.text}
+                  </div>
+                  {tweet?.extendedEntities?.media?.[0]?.media_url_https && (
+                    <img
+                      src={tweet?.extendedEntities?.media?.[0]?.media_url_https}
+                      alt="tweet media"
+                      className="rounded-lg mb-4"
+                    />
+                  )}
+                  <div className="flex items-center justify-between text-xs text-gray-400 mb-2 gap-2">
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-4 h-4 text-gray-400" />
+                      {tweet.likeCount}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Repeat2 className="w-4 h-4 text-gray-400" />
+                      {tweet.retweetCount}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MessageCircle className="w-4 h-4 text-gray-400" />
+                      {tweet.replyCount}
+                    </span>
+                  </div>
+                </Card>
+              </a>
+            ))}
+          </div>
+        </InfiniteScroll>
       </div>
     </DashboardLayout>
   );

@@ -19,7 +19,7 @@ const DashboardHeader: React.FC = () => {
 
   return (
     <header className="bg-black border-b border-border">
-      <div className="max-w-4xl mx-auto w-full px-4 py-4 sm:px-6 lg:px-8 flex justify-end items-center">
+      <div className="max-w-5xl mx-auto w-full px-4 py-4 sm:px-6 lg:px-8 flex justify-end items-center">
         {/* Only user avatar and menu now */}
         <div className="flex items-center gap-4">
           <span className="text-sm">{user?.email}</span>

@@ -1,10 +1,19 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
+import { polar } from "@/lib/polar";
 import { Flame, MessageSquare, Video } from "lucide-react";
 
 export default function Dashboard() {
   const { user } = useAuth();
+
+  const fetchProducts = async () => {
+    const products = await polar.products.list({ isRecurring: true });
+    console.log(products);
+  };
+
+  fetchProducts();
+
 
   return (
     <DashboardLayout>

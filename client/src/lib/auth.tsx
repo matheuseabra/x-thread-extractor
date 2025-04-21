@@ -41,6 +41,8 @@ export function useAuth() {
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
+  console.log('User:', user);
+  
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Loader2 className="h-8 w-8 text-white mb-4 animate-spin" />
