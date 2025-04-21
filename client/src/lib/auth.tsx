@@ -2,13 +2,21 @@ import { supabase } from "@/lib/supabaseClient";
 import { ReactNode, useEffect, useState } from "react";
 
 import type { User } from "@supabase/supabase-js";
+import { createAuthClient } from "better-auth/client";
+
+const authClient = createAuthClient();
+
+export const signInWithX = async () => {
+  await authClient.signIn.social({
+    provider: "twitter",
+  });
+};
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Try to load user from sessionStorage first
     const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));

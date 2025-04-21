@@ -13,7 +13,7 @@ const Footer = () => (
                 alt="tools4x logo"
               />
               <span className="text-white font-semibold text-lg">
-                tools4x.pro
+                tools4x
               </span>
             </div>
             <span className="mt-2 text-xs text-gray-400">

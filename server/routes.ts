@@ -1,29 +1,24 @@
 import { Checkout, Webhooks } from "@polar-sh/express";
-import {
-  validateEvent,
-  WebhookVerificationError,
-} from "@polar-sh/sdk/webhooks";
 import { twitterUrlSchema } from "@shared/schema";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import type { Express, Request, Response } from "express";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { createServer, type Server } from "http";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import { auth } from "./auth";
 import { storage } from "./storage";
 import { scrapeTwitterThread } from "./utils/twitterScraper";
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10, // Limit each IP to 10 requests per minute
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  standardHeaders: true, 
+  legacyHeaders: false,
 });
 
-const webhookSecret = process.env.POLAR_WEBHOOK_SECRET || "a986992810c3403cbcba3bb4ac0bb833";
-
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API endpoint to extract a thread
   app.post("/api/extract", limiter, async (req: Request, res: Response) => {
     try {
       // Validate URL format
@@ -77,7 +72,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // API endpoint to get thread by ID
   app.get("/api/thread/:id", limiter, async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
@@ -92,7 +86,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return res.json(thread);
   });
 
-  // API endpoint to download X videos
   app.post("/api/download/", limiter, async (req: Request, res: Response) => {
     const { url, type } = req.body;
 
@@ -160,7 +153,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // API endpoint to get highly viral and engaging tweets
   app.get("/api/tweets/viral", limiter, async (req: Request, res: Response) => {
     try {
       const minLikes = 1000;
@@ -218,41 +210,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(
     "/checkout",
     Checkout({
-      accessToken: "polar_oat_YJQj9H3240MINT1CubcfVPvXe1JB9AS50Bf5X25ufZ5", // Or set an environment variable to POLAR_ACCESS_TOKEN
-      successUrl: "http://localhost:9000/dashboard",
-      server: "sandbox", // Use sandbox if you're testing Polar - omit the parameter or pass 'production' otherwise
+      accessToken: process.env.POLAR_ACCESS_TOKEN || "", 
+      successUrl: `${process.env.APP_URL}/dashboard`,
+      server: "sandbox",
     })
   );
 
-  app.post(
-    "/api/webhook",
-    express.raw({ type: "application/json" }),
-    (req: Request, res: Response) => {
-      const body = req.body as Buffer;
+  app.all("/api/auth/*", toNodeHandler(auth));
 
-      console.log("Received webhook body:", body);
-
-      try {
-        const event = validateEvent(
-          body as Buffer,
-          req.headers as any,
-          webhookSecret
-        );
-
-        res.status(200).json({ received: true });
-      } catch (error) {
-        if (error instanceof WebhookVerificationError) {
-          res.status(403).send("");
-        }
-        throw error;
-      }
-    }
-  );
+  app.get("/api/me", async (req, res) => {
+    const session = await auth.api.getSession({
+       headers: fromNodeHeaders(req.headers),
+     });
+   return res.json(session);
+ });
 
   app.use(express.json()).post(
     "/polar/webhooks",
     Webhooks({
-      webhookSecret: webhookSecret,
+      webhookSecret: process.env.POLAR_WEBHOOK_SECRET || "",
       onSubscriptionActive: async (payload) => {
         console.log("Subscription active:", payload);
       },

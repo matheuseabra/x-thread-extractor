@@ -32,7 +32,7 @@ const pricingPlans = [
     ],
     button: {
       label: "Upgrade to Plus",
-      href: "/checkout?products=5b100806-ca38-4e9e-a33a-fa1e3930cfe7",
+      href: "/checkout/plus",
       className: "w-full bg-white",
       variant: undefined,
     },
@@ -50,7 +50,7 @@ const pricingPlans = [
     ],
     button: {
       label: "Upgrade to Pro",
-      href: "/checkout?products=950869d7-5b13-4d42-89da-ffad46075fd1",
+      href: "/checkout/pro",
       className: "w-full",
       variant: "outline",
     },

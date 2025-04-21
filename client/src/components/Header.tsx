@@ -6,7 +6,14 @@ const Header = () => {
       <div className="max-w-5xl mx-auto w-full px-4 pt-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex items-center">
           <a href="/" className="flex items-center cursor-pointer">
-            <span className="text-lg font-bold text-white">tools4x.pro</span>
+            <img
+              src="/assets/tools4x-logo.png"
+              width={18}
+              height={18}
+              className="mr-2"
+              alt="tools4x logo"
+            />
+            <span className="text-white font-semibold text-lg">tools4x</span>
           </a>
         </div>
         <div className="flex items-center gap-8">
