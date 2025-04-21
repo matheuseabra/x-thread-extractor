@@ -66,7 +66,7 @@ export default function SignUp() {
           placeholder="Full Name"
           value={fullName}
           onChange={e => setFullName(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         <input
@@ -74,7 +74,7 @@ export default function SignUp() {
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         <input
@@ -82,7 +82,7 @@ export default function SignUp() {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         <input
@@ -90,13 +90,13 @@ export default function SignUp() {
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         {error && <div className="text-red-400 mb-4 text-sm">{error}</div>}
         <button
           type="submit"
-          className="w-full py-2 rounded-lg bg-white text-black font-semibold border border-gray-700 hover:bg-gray-100 hover:text-black transition"
+          className="w-full py-2 rounded-md bg-white text-black font-semibold border border-gray-700 hover:bg-gray-100 hover:text-black transition"
           disabled={loading}
         >
           {loading ? "Signing up..." : "Sign Up"}

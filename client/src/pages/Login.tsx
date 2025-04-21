@@ -34,14 +34,14 @@ export default function Login() {
         </>
       }
     >
-      <form onSubmit={handleLogin} className="bg-zinc-900 border border-border p-8 rounded-2xl w-full max-w-sm">
+      <form onSubmit={handleLogin} className="bg-zinc-900 border border-border p-8 rounded-md w-full max-w-sm">
         <h2 className="text-xl font-bold mb-6 text-white">Login</h2>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         <input
@@ -49,26 +49,28 @@ export default function Login() {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-2 rounded-lg bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+          className="w-full mb-4 px-4 py-2 rounded-md bg-black text-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
           required
         />
         <div className="mb-4 text-right">
-          <a href="/forgot-password" className="text-xs text-white underline hover:text-gray-200">Forgot password?</a>
+          <a href="/forgot-password" className="text-xs text-white hover:underline hover:text-gray-200">Forgot password?</a>
         </div>
         {error && <div className="text-red-400 mb-4 text-sm">{error}</div>}
         <button
           type="submit"
-          className="w-full py-2 rounded-lg bg-white text-black font-semibold border border-gray-700 hover:bg-gray-100 hover:text-black transition"
+          className="w-full py-2 rounded-md bg-white text-black font-semibold border border-gray-700 hover:bg-gray-100 hover:text-black transition"
           disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
-        <div className="my-6 flex items-center justify-center">
-          <span className="text-gray-500 text-xs">or</span>
+        <div className="my-6 flex items-center justify-center gap-2">
+          <hr className="flex-1 border-t border-gray-500" />
+          <span className="text-gray-500 text-xs px-2">or</span>
+          <hr className="flex-1 border-t border-gray-500" />
         </div>
         <button
           type="button"
-          className="w-full py-2 rounded-lg bg-black text-white font-semibold border border-gray-700 hover:bg-neutral-900 transition flex items-center justify-center gap-2"
+          className="w-full py-2 rounded-md bg-black text-white font-semibold border border-gray-700 hover:bg-neutral-900 transition flex items-center justify-center gap-2"
           onClick={async () => {
             setLoading(true);
             setError(null);

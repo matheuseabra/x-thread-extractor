@@ -3,10 +3,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabaseClient";
+import { Sparkles } from "lucide-react";
 import React from "react";
 
 const DashboardHeader: React.FC = () => {
@@ -23,6 +24,14 @@ const DashboardHeader: React.FC = () => {
         {/* Only user avatar and menu now */}
         <div className="flex items-center gap-4">
           <span className="text-sm">{user?.email}</span>
+          <a
+            href="/checkout?products=5b100806-ca38-4e9e-a33a-fa1e3930cfe7"
+            className="flex items-center bg-zinc-900 border text-white font-semibold px-4 py-2 rounded-md transition-colors duration-200 text-sm shadow"
+            style={{ textDecoration: "none" }}
+          >
+            <span>Upgrade</span>
+            <Sparkles className="h-4 w-4 ml-2" />
+          </a>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="focus:outline-none">

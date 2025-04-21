@@ -1,4 +1,4 @@
-import { Checkout } from "@polar-sh/express";
+import { Checkout, Webhooks } from "@polar-sh/express";
 import {
   validateEvent,
   WebhookVerificationError,
@@ -19,6 +19,8 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+
+const webhookSecret = process.env.POLAR_WEBHOOK_SECRET || "a986992810c3403cbcba3bb4ac0bb833";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API endpoint to extract a thread
@@ -216,34 +218,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(
     "/checkout",
     Checkout({
-      accessToken: "polar_oat_87vVyXQei20yxtj9XbO0UdQccf1NlgF6I3oLZ0VOqbd", // Or set an environment variable to POLAR_ACCESS_TOKEN
-      successUrl: process.env.SUCCESS_URL || "http://localhost:9000/dashboard",
+      accessToken: "polar_oat_YJQj9H3240MINT1CubcfVPvXe1JB9AS50Bf5X25ufZ5", // Or set an environment variable to POLAR_ACCESS_TOKEN
+      successUrl: "http://localhost:9000/dashboard",
       server: "sandbox", // Use sandbox if you're testing Polar - omit the parameter or pass 'production' otherwise
     })
   );
 
   app.post(
-    "/webhook",
+    "/api/webhook",
     express.raw({ type: "application/json" }),
     (req: Request, res: Response) => {
+      const body = req.body as Buffer;
+
+      console.log("Received webhook body:", body);
+
       try {
-        // Convert headers to Record<string, string>
-        const stringHeaders: Record<string, string> = Object.fromEntries(
-          Object.entries(req.headers)
-            .filter(([_, v]) => typeof v === "string" || Array.isArray(v))
-            .map(([k, v]) => [k, Array.isArray(v) ? v.join(",") : v ?? ""])
-        );
-
         const event = validateEvent(
-          req.body,
-          stringHeaders,
-          process.env["POLAR_WEBHOOK_SECRET"] ?? ""
+          body as Buffer,
+          req.headers as any,
+          webhookSecret
         );
 
-        // Process the event
-        console.log("Received event:", event);
-
-        res.status(200).json(event);
+        res.status(200).json({ received: true });
       } catch (error) {
         if (error instanceof WebhookVerificationError) {
           res.status(403).send("");
@@ -251,6 +247,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw error;
       }
     }
+  );
+
+  app.use(express.json()).post(
+    "/polar/webhooks",
+    Webhooks({
+      webhookSecret: webhookSecret,
+      onSubscriptionActive: async (payload) => {
+        console.log("Subscription active:", payload);
+      },
+      onSubscriptionRevoked: async (payload) => {
+        console.log("Subscription canceled:", payload);
+      }
+    })
   );
 
   const httpServer = createServer(app);
